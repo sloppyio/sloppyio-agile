@@ -57,7 +57,7 @@ build:
   only:
     - branches
     
-# Example for running tests. Write your own ones
+# Example for running tests with a postgres database. Write your own ones.
 .test:
   services:
     - postgres:latest
@@ -88,12 +88,9 @@ codequality:
 review:
   stage: review
   script:
-    - check_kube_domain
+    - check_autodevops_domain
     - install_dependencies
-    #- download_chart
     - ensure_namespace
-    #- install_tiller
-    #- create_secret
     - deploy
   environment:
     name: review/$CI_COMMIT_REF_NAME
@@ -120,7 +117,6 @@ stop_review:
   only:
     refs:
       - branches
-    # kubernetes: active
   except:
     - master
 
@@ -138,7 +134,7 @@ stop_review:
 staging:
   stage: staging
   script:
-    - check_kube_domain
+    - check_autodevops_domain
     - install_dependencies
     - ensure_namespace
     - deploy
@@ -156,7 +152,7 @@ staging:
 .canary:
   stage: canary
   script:
-    - check_kube_domain
+    - check_autodevops_domain
     - install_dependencies
     - download_chart
     - ensure_namespace
@@ -181,7 +177,7 @@ production:
   stage: production
   script:
   # checkt ob AUTO_DEVOPS_DOMAIN gesetzt ist
-    - check_kube_domain
+    - check_autodevops_domain
     - install_dependencies
     # - download_chart
     # checkt ob es das projekt/namespace gibt
@@ -290,7 +286,7 @@ production:
                  sloppy show $SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME || sloppy start --var=domain:$SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME.$AUTO_DEVOPS_DOMAIN --var=project:$SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME --var=image:$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG sloppy.yml
   }
 
-  function check_kube_domain() {
+  function check_autodevops_domain() {
     if [ -z ${AUTO_DEVOPS_DOMAIN+x} ]; then
       echo "In order to deploy, AUTO_DEVOPS_DOMAIN must be set as a variable at the group or project level, or manually added in .gitlab-cy.yml"
       false

@@ -4,11 +4,6 @@ variables:
   # AUTO_DEVOPS_DOMAIN is the application deployment domain and should be set as a variable at the group or project level.
   # AUTO_DEVOPS_DOMAIN: domain.example.com
 
-  POSTGRES_USER: user
-  POSTGRES_PASSWORD: testing-password
-  POSTGRES_ENABLED: "true"
-  POSTGRES_DB: $CI_ENVIRONMENT_SLUG
-
 stages:
   - build
   - test
@@ -31,7 +26,8 @@ build:
   only:
     - branches
 
-test:
+# Configure your own tests
+.test:
   services:
     - postgres:latest
   variables:
@@ -244,6 +240,7 @@ production:
     fi
   }
 
+# example for seting up a test db
   function setup_test_db() {
     if [ -z ${KUBERNETES_PORT+x} ]; then
       DB_HOST=postgres

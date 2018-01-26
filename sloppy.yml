@@ -1,0 +1,8 @@
+version: "v1"
+project: "$project"
+services:
+  frontend:
+    web:
+       image: $image
+       domain: "$domain"
+       ports: 80

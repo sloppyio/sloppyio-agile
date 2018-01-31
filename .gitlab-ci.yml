@@ -119,7 +119,7 @@ review:
   environment:
     #name: review/$CI_COMMIT_REF_NAME
     name: $CI_COMMIT_REF_NAME
-    url: http://$CI_PROJECT_PATH_SLUG-$CI_ENVIRONMENT_SLUG.$AUTO_DEVOPS_DOMAIN
+    url: https://$SLOPPY_PROJECTNAME-$CI_COMMIT_REF_NAME.$AUTO_DEVOPS_DOMAIN
     on_stop: stop_review
   artifacts:
     paths: [environment_url.txt]

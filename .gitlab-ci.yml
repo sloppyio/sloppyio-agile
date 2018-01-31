@@ -117,7 +117,8 @@ review:
     - deploy
     - persist_environment_url
   environment:
-    name: review/$CI_COMMIT_REF_NAME
+    #name: review/$CI_COMMIT_REF_NAME
+    name: $CI_COMMIT_REF_NAME
     url: http://$CI_PROJECT_PATH_SLUG-$CI_ENVIRONMENT_SLUG.$AUTO_DEVOPS_DOMAIN
     on_stop: stop_review
   artifacts:
@@ -137,6 +138,7 @@ stop_review:
     - delete
   environment:
     name: review/$CI_COMMIT_REF_NAME
+    name: $CI_COMMIT_REF_NAME
     action: stop
   when: manual
   allow_failure: true
@@ -362,7 +364,7 @@ production:
     fi
 
     # helm delete "$name" || true
-    sloppy delete "$name"
+    sloppy delete $SLOPPY_PROJECTNAME-$CI_ENVIRONMENT_NAME
   }
   function performance() {
     export CI_ENVIRONMENT_URL=$(cat environment_url.txt)

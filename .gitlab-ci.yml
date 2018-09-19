@@ -8,7 +8,7 @@
 # * creating a review app for each topic branch,
 # * and continuous deployment to production
 #
-# In order to deploy, you must have a working sloppy.io Account 
+# To deploy, you must have a working sloppy.io Account
 # via a project integration, or via group/project variables.
 # AUTO_DEVOPS_DOMAIN must also be set as a variable at the group or project
 # level, or manually added below.
@@ -24,7 +24,7 @@
 # `.buildpacks` that contains the URLs, one on each line, in order.
 # Note: Auto CI does not work with multiple buildpacks yet
 
-image: alpine:latest
+image: alpine:3.8
 
 variables:
   # AUTO_DEVOPS_DOMAIN is the application deployment domain and should be set as a variable at the group or project level.
@@ -35,7 +35,7 @@ variables:
   POSTGRES_ENABLED: "true"
   POSTGRES_DB: $CI_ENVIRONMENT_SLUG
 
-  CODECLIMATE_VERSION: 0.69.0
+  CODECLIMATE_VERSION: 0.78.1
 
 
 stages:
@@ -312,7 +312,7 @@ production:
   function ensure_namespace() {
     CLEANED_CI_ENVIRONMENT_NAME=$( echo ${CI_ENVIRONMENT_NAME//\//-} | sed  s/review/r/g | cut -c 1-23 ) # replace "/"" with "-"" or sloppy projectname is invalid. Also shorten to 23 chars or the fqdn might be to long!
     echo "CLEANED_CI_ENVIRONMENT_NAME=$CLEANED_CI_ENVIRONMENT_NAME"
-    
+
     echo "Doing: sloppy show $SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME || sloppy start --var=domain:$SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME.$AUTO_DEVOPS_DOMAIN --var=project:$SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME --var=image:$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG sloppy.yml"
                  sloppy show $SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME || sloppy start --var=domain:$SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME.$AUTO_DEVOPS_DOMAIN --var=project:$SLOPPY_PROJECTNAME-$CLEANED_CI_ENVIRONMENT_NAME --var=image:$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG sloppy.yml
   }
